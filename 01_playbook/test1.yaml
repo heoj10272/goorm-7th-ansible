@@ -1,0 +1,14 @@
+- hosts: webservers
+  tasks: 
+  - apt:
+      name: apache2
+      state: present
+  - copy:
+      src: ports.conf.tmpl
+      dest: /etc/apache2/ports.conf
+  - service:
+      name: apache2
+      state: restarted
+
+
+

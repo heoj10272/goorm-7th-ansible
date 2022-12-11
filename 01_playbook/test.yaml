@@ -1,0 +1,31 @@
+---
+# ansible mgmt -m apt -a 'name=apache2 state=present'
+# ansible mgmt -m service -a 'name=apache2 enabled=true state=started'
+# ansible mgmt -m file -a 'path=/var/www/html state=directory'
+# ansible mgmt -m copy -a 'src=index.html dest=/var/www/html/index.html'
+# ansible mgmt -m uri -a 'url=http://192.168.56.21 status_code=200 return_content=yes'
+
+- hosts: mgmt
+  tasks:
+  - apt:
+      name: apache2
+      state: present
+  - service:
+      name: apache2
+      enabled: true
+      state: started
+  - file:
+      path: /var/www/html
+      state: directory
+  - copy:
+      src: index.html
+      dest: /var/www/html/index.html
+- hosts: localhost
+  tasks:
+  - uri:
+      url: http://192.168.56.21
+      status_code: 200
+      return_content: yes
+...
+
+
