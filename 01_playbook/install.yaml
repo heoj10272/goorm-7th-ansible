@@ -5,24 +5,42 @@
 # ansible mgmt -m copy -a 'src=index.html dest=/var/www/html/index.html'
 # ansible mgmt -m uri -a 'url=http://192.168.56.21 status_code=200 return_content=yes'
 
-- hosts: mgmt
+- name: Install Web Server
+  hosts: mgmt
+  become: true
   tasks:
-  - apt:
+  - name: Install Apache2 Package
+    apt:
       name: apache2
       state: present
-  - service:
+  - name: Checking Apache Service with Running
+    service:
       name: apache2
       enabled: true
       state: started
-  - file:
+  - name: Change Apache Service Port
+    copy:
+      src: ports.conf.tpl
+      dest: /etc/apache2/ports.conf
+    notify: Restart Apache2 Service
+  - name: Checking Web Contents Directory
+    file:
       path: /var/www/html
       state: directory
-  - copy:
+  - name: Copy Web Contents
+    copy:
       src: index.html
       dest: /var/www/html/index.html
-- hosts: localhost
+  handlers:
+  - name: Restart Apache2 Service
+    service:
+      name: apache2
+      state: restarted
+- name: Remote Access Check
+  hosts: localhost
   tasks:
-  - uri:
+  - name: Access Check
+    uri:
       url: http://192.168.56.21
       status_code: 200
       return_content: yes
