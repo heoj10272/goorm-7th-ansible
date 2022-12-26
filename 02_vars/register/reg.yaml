@@ -1,0 +1,9 @@
+- hosts: mgmt
+  gather_facts: no
+  tasks:
+  - ping: {}
+    register: ping_result
+  - debug:
+      msg: "{{ ping_result }}"
+  - debug:
+      msg: "{{ ping_result.ping }}"
